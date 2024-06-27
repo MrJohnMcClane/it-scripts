@@ -1,0 +1,1000 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: 7c2cb727f85b492d88cd56e17127c64d
+      name: Templates/SAN
+  templates:
+    - uuid: 65ea067d117e4ce5ab7431135195927f
+      template: 'Dell EMC PowerVault ME4'
+      name: 'Dell EMC PowerVault ME4'
+      description: 'Dell EMC PowerVault ME4 template using API'
+      groups:
+        - name: Templates/SAN
+      items:
+        - uuid: 7e2d3014ea974f0b9ad3ebddcea6b268
+          name: 'Disk Group Statistics'
+          type: EXTERNAL
+          key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 827231aab0cb4e81a2fa4e7dbe79afb7
+          name: 'Disk Groups'
+          type: EXTERNAL
+          key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-groups]'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 961dbc77093042f297ddf4499984c126
+          name: Disks
+          type: EXTERNAL
+          key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disks]'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 742782cea8964454ab070d10c48ba7ff
+          name: 'Pool Statistics'
+          type: EXTERNAL
+          key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pool-statistics]'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 9f03d4c9cda44e5bba2e2cb20487eb3a
+          name: Pools
+          type: EXTERNAL
+          key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pools]'
+          trends: '0'
+          value_type: TEXT
+        - uuid: c037fc1c62ec48268a924734aab35a89
+          name: 'Service Tag'
+          type: EXTERNAL
+          key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m service-tag]'
+          trends: '0'
+          value_type: TEXT
+          inventory_link: SERIALNO_A
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.[''service-tag-info''][0].[''service-tag'']'
+          tags:
+            - tag: Application
+              value: 'ME System'
+        - uuid: c0d1c4f5e84a4fdd8c1cc2e60380f2f1
+          name: 'System Info'
+          type: EXTERNAL
+          key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m system]'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 7522d13c32f745f4b67de8d0ad5f80fe
+          name: 'Volume Statistics'
+          type: EXTERNAL
+          key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volume-statistics]'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 69b0144e994c4b2f9ceea4ecb4d008a9
+          name: Volumes
+          type: EXTERNAL
+          key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volumes]'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 5de0332c2d1c4895b0229a6514becdb6
+          name: 'System Health'
+          type: DEPENDENT
+          key: system.health
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.system[0].[''health'']'
+          master_item:
+            key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m system]'
+          tags:
+            - tag: Application
+              value: 'ME System'
+        - uuid: 86ca01f84601470190da48d84e71c2ad
+          name: 'System Location'
+          type: DEPENDENT
+          key: system.location
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          inventory_link: LOCATION
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.system[0].[''system-location'']'
+          master_item:
+            key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m system]'
+          tags:
+            - tag: Application
+              value: 'ME System'
+        - uuid: 15dd60d5547248b1805c4c008dcd8ad1
+          name: 'System Model'
+          type: DEPENDENT
+          key: system.model
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          inventory_link: MODEL
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.system[0].[''product-id'']'
+          master_item:
+            key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m system]'
+          tags:
+            - tag: Application
+              value: 'ME System'
+        - uuid: 27ce616f99be420cb1981724be68d33d
+          name: 'System Name'
+          type: DEPENDENT
+          key: system.name
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          inventory_link: NAME
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.system[0].[''system-name'']'
+          master_item:
+            key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m system]'
+          tags:
+            - tag: Application
+              value: 'ME System'
+        - uuid: 7708eed76ab847d8ba8e1d4fdb42c803
+          name: 'System Vendor'
+          type: DEPENDENT
+          key: system.vendor
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          inventory_link: VENDOR
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.system[0].[''vendor-name'']'
+          master_item:
+            key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m system]'
+          tags:
+            - tag: Application
+              value: 'ME System'
+      discovery_rules:
+        - uuid: e5eabd58b71a4326884cb6ed7f5b78e5
+          name: 'Disk Group Statistics Discovery'
+          type: DEPENDENT
+          key: me4.disk-group-statistics
+          delay: '0'
+          item_prototypes:
+            - uuid: ff67ba0da05e463baaf6ce2c53fe22fa
+              name: 'Disk Group {#DG.NAME} Bytes Per Second'
+              type: DEPENDENT
+              key: 'me4.disk-groups.bps[{#DG.NAME}]'
+              delay: '0'
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].bytespersecondnumeric'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: 945bb73380274aad830120070376cfff
+              name: 'Disk Group {#DG.NAME} Data Read'
+              type: DEPENDENT
+              key: 'me4.disk-groups.data.read[{#DG.NAME}]'
+              delay: '0'
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].datareadnumeric'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: da9acad83336477ab2a14a197a655a68
+              name: 'Disk Group {#DG.NAME} Data Written'
+              type: DEPENDENT
+              key: 'me4.disk-groups.data[{#DG.NAME}]'
+              delay: '0'
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].datawrittennumeric'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: 300affdb9bad4872a7fbdc52f42f520e
+              name: 'Disk Group {#DG.NAME} IOPS'
+              type: DEPENDENT
+              key: 'me4.disk-groups.iops[{#DG.NAME}]'
+              delay: '0'
+              units: IOPS
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].iops'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: c6e0ede6a7e8475c878ab2c8c72e8fb2
+              name: 'Disk Group {#DG.NAME} Read Latency'
+              type: DEPENDENT
+              key: 'me4.disk-groups.latency.read[{#DG.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: '!ms'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].avgreadrsptime'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: 1668fbbbad3746a79a049f481923e62f
+              name: 'Disk Group {#DG.NAME} Write Latency'
+              type: DEPENDENT
+              key: 'me4.disk-groups.latency.write[{#DG.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: '!ms'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].avgwritersptime'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: b887fdbe0cef4fa0a414ec49e578fd21
+              name: 'Disk Group {#DG.NAME} Latency'
+              type: DEPENDENT
+              key: 'me4.disk-groups.latency[{#DG.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: '!ms'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].avgrsptime'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+          graph_prototypes:
+            - uuid: b14fd82bcbf34d299ecf01126fe82115
+              name: 'Disk Group {#DG.NAME} Latency'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.disk-groups.latency.read[{#DG.NAME}]'
+                - sortorder: '1'
+                  color: F63100
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.disk-groups.latency.write[{#DG.NAME}]'
+                - sortorder: '2'
+                  color: 2774A4
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.disk-groups.latency[{#DG.NAME}]'
+            - uuid: 44c9fa96165d499ca60e933a835c793a
+              name: 'Disk Group {#DG.NAME} Performance'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.disk-groups.iops[{#DG.NAME}]'
+          master_item:
+            key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-group-statistics]'
+          lld_macro_paths:
+            - lld_macro: '{#DG.NAME}'
+              path: $.name
+        - uuid: 2ab7082cd3ff44b7b0437172d2542a02
+          name: 'Disk Groups Discovery'
+          type: DEPENDENT
+          key: me4.disk-groups
+          delay: '0'
+          item_prototypes:
+            - uuid: f58bda0fb7fd43789a415c7f3af2539e
+              name: 'Disk Group {#DG.NAME} Free Space'
+              type: DEPENDENT
+              key: 'me4.disk-groups.freespace[{#DG.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].freespace'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+                - type: REGEX
+                  parameters:
+                    - '(\d*\.?\d*)GB'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '1073741824'
+              master_item:
+                key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-groups]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: 572993806ab2453287057da5803d78c4
+              name: 'Disk Group {#DG.NAME} Health'
+              type: DEPENDENT
+              key: 'me4.disk-groups.health[{#DG.NAME}]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].health'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-groups]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: 990056dde1c04c5b8e3a22216d4e7205
+              name: 'Disk Group {#DG.NAME} Size'
+              type: DEPENDENT
+              key: 'me4.disk-groups.size[{#DG.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#DG.NAME}'')].size'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+                - type: REGEX
+                  parameters:
+                    - '(\d*\.?\d*)GB'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '1073741824'
+              master_item:
+                key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-groups]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+            - uuid: 6c26b143f0c84bab96de9fcc7ed31e83
+              name: 'Disk Group {#DG.NAME} Space Used %'
+              type: CALCULATED
+              key: 'me4.disk-groups.space.used.percent[{#DG.NAME}]'
+              value_type: FLOAT
+              units: '%'
+              params: '100*(last(//me4.disk-groups.size[{#DG.NAME}])-last(//me4.disk-groups.freespace[{#DG.NAME}]))/last(//me4.disk-groups.size[{#DG.NAME}])'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk Group'
+          graph_prototypes:
+            - uuid: 7089483d98834af985346601d71f6a06
+              name: 'Disk Group {#DG.NAME} Space Used %'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.disk-groups.space.used.percent[{#DG.NAME}]'
+          master_item:
+            key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disk-groups]'
+          lld_macro_paths:
+            - lld_macro: '{#DG.NAME}'
+              path: $.name
+        - uuid: 95bacff00b804c71a5552307862c29c4
+          name: 'Disks Discovery'
+          type: DEPENDENT
+          key: me4.disks
+          delay: '0'
+          item_prototypes:
+            - uuid: cbe4039beb5b4c4c89963e25e7eb1d9d
+              name: 'Disk {#DISK.SLOT} Health'
+              type: DEPENDENT
+              key: 'me4.disks.health[{#DISK.SLOT}]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.slot==''{#DISK.SLOT}'')].health'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disks]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk'
+            - uuid: a90387d2f120418e9cd7923efe0d06a5
+              name: 'Disk {#DISK.SLOT} SSD Life Left'
+              type: DEPENDENT
+              key: 'me4.disks.lifeleft[{#DISK.SLOT}]'
+              delay: '0'
+              units: '%'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.slot==''{#DISK.SLOT}'')].ssdlifeleftnumeric'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disks]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk'
+            - uuid: b9064c4aab2f4da79425cc8531e14506
+              name: 'Disk {#DISK.SLOT} Status'
+              type: DEPENDENT
+              key: 'me4.disks.status[{#DISK.SLOT}]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.slot==''{#DISK.SLOT}'')].status'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disks]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk'
+            - uuid: aa89f7d56a884cb2a7fa6a5168c7e257
+              name: 'Disk {#DISK.SLOT} Temperature'
+              type: DEPENDENT
+              key: 'me4.disks.temperature[{#DISK.SLOT}]'
+              delay: '0'
+              units: C
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.slot==''{#DISK.SLOT}'')].temperaturenumeric'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disks]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Disk'
+          graph_prototypes:
+            - uuid: 951dcbb3c1be48a1883b6a5fd7c3d02f
+              name: 'Disk {#DISK.SLOT} Temperature'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.disks.temperature[{#DISK.SLOT}]'
+          master_item:
+            key: 'me4.sh[-i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m disks]'
+          lld_macro_paths:
+            - lld_macro: '{#DISK.SLOT}'
+              path: $.slot
+        - uuid: e4a73702ee444a66ba680d37f689d8fb
+          name: 'Pool Statistics Discovery'
+          type: DEPENDENT
+          key: me4.pool-statistics
+          delay: '0'
+          item_prototypes:
+            - uuid: 540e9105cf134f87b7b5009df05b635f
+              name: 'Pool {#POOL.NAME} Bytes Per Second'
+              type: DEPENDENT
+              key: 'me4.pool-statistics.bps[{#POOL.NAME}]'
+              delay: '0'
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.pool==''{#POOL.NAME}'')].resettablestatistics'
+                - type: REGEX
+                  parameters:
+                    - '\"bytespersecondnumeric\":(\d+),'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pool-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: 84fdf377e7e0402e9a58b77654517d7e
+              name: 'Pool {#POOL.NAME} Data Read'
+              type: DEPENDENT
+              key: 'me4.pool-statistics.data.read[{#POOL.NAME}]'
+              delay: '0'
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.pool==''{#POOL.NAME}'')].resettablestatistics'
+                - type: REGEX
+                  parameters:
+                    - '\"datareadnumeric\":(\d+),'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pool-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: 4f84f1a81cc54abbbfb54f702cad4911
+              name: 'Pool {#POOL.NAME} Data Written'
+              type: DEPENDENT
+              key: 'me4.pool-statistics.data.write[{#POOL.NAME}]'
+              delay: '0'
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.pool==''{#POOL.NAME}'')].resettablestatistics'
+                - type: REGEX
+                  parameters:
+                    - '\"datawrittennumeric\":(\d+),'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pool-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: 6338fc460eb042ce8149f7efd825e233
+              name: 'Pool {#POOL.NAME} IOPS'
+              type: DEPENDENT
+              key: 'me4.pool-statistics.iops[{#POOL.NAME}]'
+              delay: '0'
+              units: IOPS
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.pool==''{#POOL.NAME}'')].[''resettablestatistics''][0][''iops'']'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pool-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: 474a21af0ccc452a9df4062af8eb78d6
+              name: 'Pool {#POOL.NAME} Read Latency'
+              type: DEPENDENT
+              key: 'me4.pool-statistics.latency.read[{#POOL.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: ms
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.pool==''{#POOL.NAME}'')].resettablestatistics'
+                - type: REGEX
+                  parameters:
+                    - '\"avgreadrsptime\":(\d+),'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pool-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: d4104121f8f34bdc881a5ab4bae7a3a6
+              name: 'Pool {#POOL.NAME} Write Latency'
+              type: DEPENDENT
+              key: 'me4.pool-statistics.latency.write[{#POOL.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: ms
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.pool==''{#POOL.NAME}'')].resettablestatistics'
+                - type: REGEX
+                  parameters:
+                    - '\"avgwritersptime\":(\d+),'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pool-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+          graph_prototypes:
+            - uuid: 115e1d77fa9f46949373813049f40827
+              name: 'Pool {#POOL.NAME} Performance'
+              graph_items:
+                - drawtype: FILLED_REGION
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.pool-statistics.iops[{#POOL.NAME}]'
+          master_item:
+            key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pool-statistics]'
+          lld_macro_paths:
+            - lld_macro: '{#POOL.NAME}'
+              path: $.pool
+        - uuid: 802fd999883b4c9aa1af2697e3aded18
+          name: 'Pools Discovery'
+          type: DEPENDENT
+          key: me4.pools
+          delay: '0'
+          item_prototypes:
+            - uuid: 0676529a2de547eb8ec3bb0b1faca792
+              name: 'Pool {#POOL.NAME} Health'
+              type: DEPENDENT
+              key: 'me4.pools.health[{#POOL.NAME}]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#POOL.NAME}'')].health'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pools]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: f512eb0011ba4741a7bd69b68f6e3c23
+              name: 'Pool {#POOL.NAME} Size'
+              type: DEPENDENT
+              key: 'me4.pools.size[{#POOL.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#POOL.NAME}'')].totalsize'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+                - type: REGEX
+                  parameters:
+                    - '(\d*\.?\d*)GB'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '1073741824'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pools]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: 77d796ebdbc540958d49f42889769345
+              name: 'Pool {#POOL.NAME} Space Available'
+              type: DEPENDENT
+              key: 'me4.pools.space.available[{#POOL.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.name==''{#POOL.NAME}'')].totalavail'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+                - type: REGEX
+                  parameters:
+                    - '(\d*\.?\d*)GB'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '1073741824'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pools]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: e41d214bbeb849fba3c2ac70af8a681a
+              name: 'Pool {#POOL.NAME} Space Used %'
+              type: CALCULATED
+              key: 'me4.pools.space.used.percent[{#POOL.NAME}]'
+              units: '%'
+              params: '100*last(//me4.pools.space.used[{#POOL.NAME}])/last(//me4.pools.size[{#POOL.NAME}])'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+            - uuid: 0e295b31ec5f4d4084ba25ed1f91b9aa
+              name: 'Pool {#POOL.NAME} Space Used'
+              type: CALCULATED
+              key: 'me4.pools.space.used[{#POOL.NAME}]'
+              units: B
+              params: 'last(//me4.pools.size[{#POOL.NAME}])-last(//me4.pools.space.available[{#POOL.NAME}])'
+              tags:
+                - tag: Application
+                  value: 'ME4 Pool'
+          graph_prototypes:
+            - uuid: 1f763fd18dd64239be14f5e3c389d548
+              name: 'Pool {#POOL.NAME} Space Used %'
+              graph_items:
+                - drawtype: FILLED_REGION
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.pools.space.used.percent[{#POOL.NAME}]'
+          master_item:
+            key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m pools]'
+          lld_macro_paths:
+            - lld_macro: '{#POOL.NAME}'
+              path: $.name
+        - uuid: 42d06384af3d464aa10ed66156ac2622
+          name: 'Volume Statistics Discovery'
+          type: DEPENDENT
+          key: me4.volume.statistics
+          delay: '0'
+          item_prototypes:
+            - uuid: bfeb3d2fd459454296d0c8d09fe813b9
+              name: 'Volume {#VOLUME.NAME} Bytes Per Second'
+              type: DEPENDENT
+              key: 'me4.volume-statistics.bps[{#VOLUME.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.volumename==''{#VOLUME.NAME}'')].bytespersecondnumeric'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volume-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Volume'
+            - uuid: 46a7b861c10d493cb677e1ebdfa97515
+              name: 'Volume {#VOLUME.NAME} Data Read'
+              type: DEPENDENT
+              key: 'me4.volume-statistics.data.read[{#VOLUME.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.volumename==''{#VOLUME.NAME}'')].datareadnumeric'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volume-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Volume'
+            - uuid: 93924259be7e43dba2a3dfa80ebacf6e
+              name: 'Volume {#VOLUME.NAME} Data Written'
+              type: DEPENDENT
+              key: 'me4.volume-statistics.data.write[{#VOLUME.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.volumename==''{#VOLUME.NAME}'')].datawrittennumeric'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volume-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Volume'
+            - uuid: fdd4e475aeef4977ba8036fea753538d
+              name: 'Volume {#VOLUME.NAME} IOPS'
+              type: DEPENDENT
+              key: 'me4.volume-statistics.iops[{#VOLUME.NAME}]'
+              delay: '0'
+              units: IOPS
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.volumename==''{#VOLUME.NAME}'')].iops'
+                - type: REGEX
+                  parameters:
+                    - '\[(\d+)\]'
+                    - \1
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volume-statistics]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Volume'
+          graph_prototypes:
+            - uuid: b8cc4399012c4abf961d0fc01769a982
+              name: 'Volume  {#VOLUME.NAME} Performance'
+              graph_items:
+                - drawtype: FILLED_REGION
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.volume-statistics.iops[{#VOLUME.NAME}]'
+          master_item:
+            key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volume-statistics]'
+          lld_macro_paths:
+            - lld_macro: '{#VOLUME.NAME}'
+              path: $.volumename
+        - uuid: d2c56bbe465348b6a3fa8626dba8f8d4
+          name: 'Volumes Discovery'
+          type: DEPENDENT
+          key: me4.volumes
+          delay: '0'
+          item_prototypes:
+            - uuid: cadde137e9584de4a36cacf52417e2c0
+              name: 'Volume {#VOLUME.NAME} Space Used'
+              type: DEPENDENT
+              key: 'me4.volumes.size.allocated[{#VOLUME.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.volumename==''{#VOLUME.NAME}'')].allocatedsize'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+                - type: REGEX
+                  parameters:
+                    - '(\d*\.?\d*)GB'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '1073741824'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volumes]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Volume'
+            - uuid: f4d728dd34fb41df8ae17752cd110005
+              name: 'Volume {#VOLUME.NAME} Free Space'
+              type: CALCULATED
+              key: 'me4.volumes.size.free[{#VOLUME.NAME}]'
+              units: B
+              params: 'last(//me4.volumes.size[{#VOLUME.NAME}])-last(//me4.volumes.size.allocated[{#VOLUME.NAME}])'
+              tags:
+                - tag: Application
+                  value: 'ME4 Volume'
+            - uuid: 9317fefedbed43fc838a18df089e065a
+              name: 'Volume {#VOLUME.NAME} Space Used %'
+              type: CALCULATED
+              key: 'me4.volumes.size.used.percent[{#VOLUME.NAME}]'
+              units: '%'
+              params: '100*last(//me4.volumes.size.allocated[{#VOLUME.NAME}])/last(//me4.volumes.size[{#VOLUME.NAME}])'
+              tags:
+                - tag: Application
+                  value: 'ME4 Volume'
+            - uuid: a17f00a46ab44687947326acbb512deb
+              name: 'Volume {#VOLUME.NAME} Size'
+              type: DEPENDENT
+              key: 'me4.volumes.size[{#VOLUME.NAME}]'
+              delay: '0'
+              value_type: FLOAT
+              units: B
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.volumename==''{#VOLUME.NAME}'')].totalsize'
+                - type: REGEX
+                  parameters:
+                    - '\["([^"]+)"\]'
+                    - \1
+                - type: REGEX
+                  parameters:
+                    - '(\d*\.?\d*)GB'
+                    - \1
+                - type: MULTIPLIER
+                  parameters:
+                    - '1073741824'
+              master_item:
+                key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volumes]'
+              tags:
+                - tag: Application
+                  value: 'ME4 Volume'
+          graph_prototypes:
+            - uuid: 7c062a9e87f84707bec6e6d61c85e910
+              name: 'Volume {#VOLUME.NAME} Space Used %'
+              graph_items:
+                - drawtype: FILLED_REGION
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Dell EMC PowerVault ME4'
+                    key: 'me4.volumes.size.used.percent[{#VOLUME.NAME}]'
+          master_item:
+            key: 'me4.sh[ -i {$ME4.IPADDRESS} -u {$ME4.USER} -p {$ME4.PASSWORD} -m volumes]'
+          lld_macro_paths:
+            - lld_macro: '{#VOLUME.NAME}'
+              path: $.volumename
+      macros:
+        - macro: '{$ME4.IPADDRESS}'
+        - macro: '{$ME4.PASSWORD}'
+        - macro: '{$ME4.USER}'
