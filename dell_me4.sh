@@ -23,6 +23,7 @@ if [[ $? -ne 0 ]]; then
     exit 1;
 fi
 
+
 if [[ $# -eq 0 ]]; then
     Help
     exit 1;
@@ -36,21 +37,25 @@ if [ -z $2]; then
         module=$( echo $1 | grep -oP "(\-m\s)(\S+)" | sed -e 's/-m\s//' )
 fi
 
+
 if [ -z "$address" ]; then
         echo "No address specified."
         echo
         Help
         exit 1
+
 elif [ -z "$user" ]; then
         echo "No username specified."
         echo
         Help
         exit 1
+
 elif [ -z "$pass" ]; then
         echo "No password specified."
         echo
         Help
         exit 1
+
 elif [ -z "$module" ]; then
         echo "No modules specified."
         echo
@@ -75,15 +80,19 @@ if [[ $sessionkey == "Authentication Unsuccessful" ]]; then
         exit 1
 fi
 
+
 if [ -z $module ]; then
         echo "No module specified"
         exit 1
 fi
 
+
 if [[ $module == "system" ]]; then
         curl -sS -X GET -H "sessionKey: $sessionkey" -H "Datatype: json" -k https://$address/api/show/system
+
 elif [[ $module == "service-tag" ]]; then
         curl -sS -X GET -H "sessionKey: $sessionkey" -H "Datatype: json" -k https://$address/api/show/service-tag-info
+
 elif [[ $module == "disks" ]]; then
         curl -sS -X GET -H "sessionKey: $sessionkey" -H "Datatype: json" -k https://$address/api/show/disks | jq -M '.drives' | perl -pe 's/-(?=[^"]*"\s*:)//g'
 
@@ -101,6 +110,7 @@ elif [[ $module == "pool-statistics" ]]; then
 
 elif [[ $module == "volumes" ]]; then
         curl -sS -X GET -H "sessionKey: $sessionkey" -H "Datatype: json" -k https://$address/api/show/volumes | jq -M '.volumes' | perl -pe 's/-(?=[^"]*"\s*:)//g'
+
 elif [[ $module == "volume-statistics" ]]; then
         curl -sS -X GET -H "sessionKey: $sessionkey" -H "Datatype: json" -k https://$address/api/show/volume-statistics | jq -M '."volume-statistics"' | perl -pe 's/-(?=[^"]*"\s*:)//g'
 fi
